@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoMaster - Advanced Task Management</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-left">
+                <h1><i class="fas fa-check-circle"></i> TodoMaster</h1>
+                <span class="user-welcome">Welcome, <%= user.username %>!</span>
+            </div>
+            <div class="header-right">
+                <button id="theme-toggle" class="btn-icon" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="export-btn" class="btn-icon" title="Export Data">
+                    <i class="fas fa-download"></i>
+                </button>
+                <form action="/logout" method="POST" style="display: inline;">
+                    <button type="submit" class="btn-icon" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </form>
+            </div>
+        </header>
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="search-section">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-input" placeholder="Search todos..." />
+                    </div>
+                </div>
+                <div class="filters-section">
+                    <h3>Filters</h3>
+                    <div class="filter-group">
+                        <label>Category:</label>
+                        <select id="category-filter">
+                            <option value="">All Categories</option>
+                            <% categories.forEach(category => { %>
+                                <option value="<%= category.name %>"><%= category.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Priority:</label>
+                        <select id="priority-filter">
+                            <option value="">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Status:</label>
+                        <select id="status-filter">
+                            <option value="">All Tasks</option>
+                            <option value="false">Pending</option>
+                            <option value="true">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="stats-section">
+                    <h3>Statistics</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Tasks:</span>
+                        <span id="total-tasks"><%= todos.length %></span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Completed:</span>
+                        <span id="completed-tasks"><%= todos.filter(t => t.completed).length %></span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Pending:</span>
+                        <span id="pending-tasks"><%= todos.filter(t => !t.completed).length %></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+                <div class="categories-section">
+                    <h3>Categories</h3>
+                    <div id="categories-list">
+                        <% categories.forEach(category => { %>
+                            <div class="category-item" data-category="<%= category.name %>">
+                                <span class="category-color" data-color="<%= category.color %>"></span>
+                                <span class="category-name"><%= category.name %></span>
+                            </div>
+                        <% }) %>
+                    </div>
+                    <button id="add-category-btn" class="btn-secondary">
+                        <i class="fas fa-plus"></i> Add Category
+                    </button>
+                </div>
+            </aside>
+            <section class="todo-section">
+                <div class="todo-header">
+                    <h2>Your Tasks</h2>
+                    <button id="add-todo-btn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add Task
+                    </button>
+                </div>
+                <div id="todos-container" class="todos-container">
+                    <% todos.sort((a, b) => a.order - b.order).forEach(todo => { %>
+                        <div class="todo-item <%= todo.completed ? 'completed' : '' %>" data-id="<%= todo.id %>" draggable="true">
+                            <div class="todo-checkbox">
+                                <input type="checkbox" <%= todo.completed ? 'checked' : '' %> 
+                                       onchange="toggleTodo('<%= todo.id %>')">
+                            </div>
+                            <div class="todo-content">
+                                <h4 class="todo-title"><%= todo.title %></h4>
+                                <% if (todo.description) { %>
+                                    <p class="todo-description"><%= todo.description %></p>
+                                <% } %>
+                                <div class="todo-meta">
+                                    <span class="todo-category" data-category-color="<%= categories.find(c => c.name === todo.category) ? categories.find(c => c.name === todo.category).color : '#4ecdc4' %>">
+                                        <%= todo.category %>
+                                    </span>
+                                    <span class="todo-priority priority-<%= todo.priority %>">
+                                        <i class="fas fa-flag"></i> <%= todo.priority %>
+                                    </span>
+                                    <% if (todo.dueDate) { %>
+                                        <span class="todo-due-date">
+                                            <i class="fas fa-calendar"></i> 
+                                            <%= new Date(todo.dueDate).toLocaleDateString() %>
+                                        </span>
+                                    <% } %>
+                                </div>
+                                <% if (todo.tags && todo.tags.length > 0) { %>
+                                    <div class="todo-tags">
+                                        <% todo.tags.forEach(tag => { %>
+                                            <span class="tag">#<%= tag %></span>
+                                        <% }) %>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <div class="todo-actions">
+                                <button class="btn-icon" onclick="editTodo('<%= todo.id %>')" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-danger" onclick="deleteTodo('<%= todo.id %>')" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <div class="drag-handle" title="Drag to reorder">
+                                    <i class="fas fa-grip-vertical"></i>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+                <% if (todos.length === 0) { %>
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>No tasks yet!</h3>
+                        <p>Create your first task to get started.</p>
+                    </div>
+                <% } %>
+            </section>
+        </main>
+    </div>
+    <div id="todo-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Task</h3>
+                <button class="close-btn" onclick="closeTodoModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="todo-form" class="modal-body">
+                <input type="hidden" id="todo-id">
+                <div class="form-group">
+                    <label for="todo-title">Title *</label>
+                    <input type="text" id="todo-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="todo-description">Description</label>
+                    <textarea id="todo-description" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="todo-category">Category</label>
+                        <select id="todo-category">
+                            <% categories.forEach(category => { %>
+                                <option value="<%= category.name %>"><%= category.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="todo-priority">Priority</label>
+                        <select id="todo-priority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="todo-due-date">Due Date</label>
+                    <input type="date" id="todo-due-date">
+                </div>
+                <div class="form-group">
+                    <label for="todo-tags">Tags (comma-separated)</label>
+                    <input type="text" id="todo-tags" placeholder="work, urgent, meeting">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeTodoModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="category-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Category</h3>
+                <button class="close-btn" onclick="closeCategoryModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="category-form" class="modal-body">
+                <div class="form-group">
+                    <label for="category-name">Category Name *</label>
+                    <input type="text" id="category-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="category-color">Color</label>
+                    <div class="color-picker">
+                        <input type="color" id="category-color" value="#4ecdc4">
+                        <div class="color-presets">
+                            <div class="color-preset" style="background: #ff6b6b" onclick="selectColor('#ff6b6b')"></div>
+                            <div class="color-preset" style="background: #4ecdc4" onclick="selectColor('#4ecdc4')"></div>
+                            <div class="color-preset" style="background: #45b7d1" onclick="selectColor('#45b7d1')"></div>
+                            <div class="color-preset" style="background: #96ceb4" onclick="selectColor('#96ceb4')"></div>
+                            <div class="color-preset" style="background: #feca57" onclick="selectColor('#feca57')"></div>
+                            <div class="color-preset" style="background: #ff9ff3" onclick="selectColor('#ff9ff3')"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeCategoryModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="notifications-container"></div>
+
+    <script src="/script.js"></script>
+</body>
+</html>

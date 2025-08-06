@@ -1,0 +1,43 @@
+{
+    "name": "todomaster-app",
+    "version": "1.0.0",
+    "description": "Advanced Todo Application with modern UI/UX and comprehensive features",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "todo",
+        "task-management",
+        "productivity",
+        "ejs",
+        "express",
+        "json-database"
+    ],
+    "author": "Arham Ali",
+    "license": "MIT",
+    "dependencies": {
+        "bcrypt": "^5.1.1",
+        "ejs": "^3.1.10",
+        "express": "^5.1.0",
+        "express-session": "^1.17.3",
+        "node": "^22.18.0",
+        "uuid": "^9.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yourusername/todomaster-app.git"
+    },
+    "bugs": {
+        "url": "https://github.com/yourusername/todomaster-app/issues"
+    },
+    "homepage": "https://github.com/yourusername/todomaster-app#readme"
+}

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= mode==='login' ? 'Login' : 'Register' %> - TodoMaster
+    </title>
+    <link rel="stylesheet" href="/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-background"></div>
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <i class="fas fa-check-circle"></i>
+                    <h1>TodoMaster</h1>
+                </div>
+                <p class="tagline">Your advanced task management solution</p>
+            </div>
+            <div class="auth-form-container">
+                <div class="auth-tabs">
+                    <button class="tab-btn <%= mode === 'login' ? 'active' : '' %>" onclick="switchTab('login')">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <button class="tab-btn <%= mode === 'register' ? 'active' : '' %>" onclick="switchTab('register')">
+                        <i class="fas fa-user-plus"></i> Register
+                    </button>
+                </div>
+                <% if (error) { %>
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <%= error %>
+                    </div>
+                    <% } %>
+                        <div id="login-form" class="auth-form <%= mode === 'login' ? 'active' : '' %>">
+                            <form action="/login" method="POST">
+                                <div class="form-group">
+                                    <label for="login-email">
+                                        <i class="fas fa-envelope"></i> Email
+                                    </label>
+                                    <input type="email" id="login-email" name="email" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="login-password">
+                                        <i class="fas fa-lock"></i> Password
+                                    </label>
+                                    <div class="password-container">
+                                        <input type="password" id="login-password" name="password" required>
+                                        <button type="button" class="password-toggle"
+                                            onclick="togglePassword('login-password')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button type="submit" class="auth-btn login-btn">
+                                    <i class="fas fa-sign-in-alt"></i> Sign In
+                                </button>
+                            </form>
+                        </div>
+                        <div id="register-form" class="auth-form <%= mode === 'register' ? 'active' : '' %>">
+                            <form action="/register" method="POST">
+                                <div class="form-group">
+                                    <label for="register-username">
+                                        <i class="fas fa-user"></i> Username
+                                    </label>
+                                    <input type="text" id="register-username" name="username" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="register-email">
+                                        <i class="fas fa-envelope"></i> Email
+                                    </label>
+                                    <input type="email" id="register-email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="register-password">
+                                        <i class="fas fa-lock"></i> Password
+                                    </label>
+                                    <div class="password-container">
+                                        <input type="password" id="register-password" name="password" required
+                                            minlength="6">
+                                        <button type="button" class="password-toggle"
+                                            onclick="togglePassword('register-password')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <small class="form-hint">Minimum 6 characters</small>
+                                </div>
+                                <button type="submit" class="auth-btn register-btn">
+                                    <i class="fas fa-user-plus"></i> Create Account
+                                </button>
+                            </form>
+                        </div>
+            </div>
+            <div class="auth-footer">
+                <div class="features-preview">
+                    <div class="feature">
+                        <i class="fas fa-tasks"></i>
+                        <span>Smart Task Management</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Progress Tracking</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-palette"></i>
+                        <span>Customizable Themes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function switchTab(mode) {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const loginTab = document.querySelector('.tab-btn:first-child');
+            const registerTab = document.querySelector('.tab-btn:last-child');
+            if (mode === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                window.history.replaceState({}, '', '/login');
+            } else {
+                registerForm.classList.add('active');
+                loginForm.classList.remove('active');
+                registerTab.classList.add('active');
+                loginTab.classList.remove('active');
+                window.history.replaceState({}, '', '/register');
+            }
+        }
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const toggle = input.nextElementSibling;
+            const icon = toggle.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function () {
+                    this.parentElement.classList.add('focused');
+                });
+
+                input.addEventListener('blur', function () {
+                    if (!this.value) {
+                        this.parentElement.classList.remove('focused');
+                    }
+                });
+
+                if (input.value) {
+                    input.parentElement.classList.add('focused');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
