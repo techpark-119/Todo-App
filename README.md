@@ -402,7 +402,7 @@ This project was inspired by modern productivity apps like Todoist, Any.do, and 
 
 <div align="center">
 
-**Made with ❤️ by the TodoMaster Team**
+**Made with ❤️ by The Arham Ali**
 
 [⭐ Star this repo](https://github.com/techpark-119/Todo-App) • [🐛 Report Bug](https://github.com/techpark-119/Todo-App/issues) • [✨ Request Feature](https://github.com/techpark-119/Todo-App/issues)
 
