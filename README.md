@@ -360,7 +360,7 @@ copies or substantial portions of the Software.
 ## 👥 Authors & Acknowledgments
 
 ### **Created By**
-- **TodoMaster Team** - *Initial work and ongoing development*
+- **Arham Ali** - *Initial work and ongoing development*
 
 ### **Special Thanks**
 - Font Awesome for the beautiful icons
@@ -375,10 +375,10 @@ This project was inspired by modern productivity apps like Todoist, Any.do, and 
 
 ## 📊 Project Stats
 
-![GitHub stars](https://img.shields.io/github/stars/yourusername/todomaster-app?style=social)
-![GitHub forks](https://img.shields.io/github/forks/yourusername/todomaster-app?style=social)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/todomaster-app)
-![GitHub license](https://img.shields.io/github/license/yourusername/todomaster-app)
+![GitHub stars](https://img.shields.io/github/stars/techpark-119/Todo-App?style=social)
+![GitHub forks](https://img.shields.io/github/forks/techpark-119/Todo-App?style=social)
+![GitHub issues](https://img.shields.io/github/issues/techpark-119/Todo-App)
+![GitHub license](https://img.shields.io/github/license/techpark-119/Todo-App)
 
 ---
 
@@ -404,6 +404,6 @@ This project was inspired by modern productivity apps like Todoist, Any.do, and 
 
 **Made with ❤️ by the TodoMaster Team**
 
-[⭐ Star this repo](https://github.com/yourusername/todomaster-app) • [🐛 Report Bug](https://github.com/yourusername/todomaster-app/issues) • [✨ Request Feature](https://github.com/yourusername/todomaster-app/issues)
+[⭐ Star this repo](https://github.com/techpark-119/Todo-App) • [🐛 Report Bug](https://github.com/techpark-119/Todo-App/issues) • [✨ Request Feature](https://github.com/techpark-119/Todo-App/issues)
 
 </div>
